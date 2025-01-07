@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import useLoginStore from "../store/loginStore";
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import useLoginStore from '../store/loginStore';
 
 function Header() {
   const { isLogin, logout } = useLoginStore();
@@ -25,9 +25,6 @@ function Header() {
               </Link>
             </div>
           )}
-          <Link to="history" className="authLink">
-            History
-          </Link>
           <Link to="manager" className="authLink">
             관리자 메뉴
           </Link>
