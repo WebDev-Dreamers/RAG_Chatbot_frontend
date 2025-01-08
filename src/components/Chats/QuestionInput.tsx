@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { FaArrowUp } from 'react-icons/fa';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 interface QuestionInputProps {
   onSendMessage: (question: string) => void;
@@ -8,15 +8,25 @@ interface QuestionInputProps {
 
 function QuestionInput({ onSendMessage }: QuestionInputProps) {
   const [question, setQuestion] = useState('');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setQuestion(e.target.value);
+
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
   };
 
   const handleSend = () => {
     if (question.trim()) {
       onSendMessage(question);
       setQuestion('');
+
+      if (textareaRef.current) {
+        textareaRef.current.style.height = '40px';
+      }
     }
   };
 
@@ -30,6 +40,7 @@ function QuestionInput({ onSendMessage }: QuestionInputProps) {
   return (
     <QuestionInputStyle>
       <textarea
+        ref={textareaRef}
         placeholder="메시지 입력"
         className="input"
         onChange={handleChange}
@@ -57,14 +68,15 @@ const QuestionInputStyle = styled.div`
   .input {
     flex-grow: 1;
     resize: none;
-    height: 40px;
-    padding: 0px 16px;
+    padding: 10px 16px;
     margin-right: 10px;
+    min-height: 40px;
+    max-height: 120px;
     font-size: 14px;
     background: none;
     border: none;
     outline: none;
-    overflow-y: scroll;
+    overflow-y: auto;
 
     &::placeholder {
       color: #aaa;
@@ -85,18 +97,18 @@ const QuestionInputStyle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     background: #2c3e50;
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    margin: auto auto;
+    margin: auto 6px;
     transition: background-color 0.3s ease;
 
     svg {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       color: white;
     }
 
