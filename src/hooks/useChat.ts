@@ -3,11 +3,12 @@ import { ChatType, IChatHistory, IHistory, IMessage } from '../types';
 import { useChatbotStore } from '../store/chatbotStore';
 
 export const useChat = (type: ChatType) => {
-  const { getChatHistory } = useChatbotStore();
+  const { getChatHistory, getChatAnswer } = useChatbotStore();
 
   const [history, setHistory] = useState<IHistory[]>([]);
   const [chats, setChats] = useState<IMessage[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchChatHistory = useCallback(async () => {
     setLoading(true);
@@ -27,9 +28,32 @@ export const useChat = (type: ChatType) => {
     }
   }, [getChatHistory, type]);
 
+  const sendMessage = useCallback(
+    async (question: string) => {
+      const userChat: IMessage = { role: 'user', content: question };
+      setChats((prevChats) => [...prevChats, userChat]);
+
+      try {
+        const answer = await getChatAnswer({ type, chatId: history[0]?.id || 0, question });
+
+        if (answer) {
+          const botChat: IMessage = {
+            role: answer.role,
+            content: answer.content,
+          };
+          setChats((prevChats) => [...prevChats, botChat]);
+        }
+      } catch (error) {
+        setError('메시지 전송에 실패했습니다.');
+        console.error('메시지 전송에 실패했습니다.', error);
+      }
+    },
+    [getChatAnswer, type, history]
+  );
+
   useEffect(() => {
     fetchChatHistory();
   }, [fetchChatHistory]);
 
-  return { history, chats, loading };
+  return { history, chats, loading, error, sendMessage };
 };

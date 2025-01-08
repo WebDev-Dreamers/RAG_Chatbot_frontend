@@ -27,5 +27,6 @@ export interface IMessage {
 
 export interface IChatRequest {
   type: ChatType;
+  chatId: number;
   question: string;
 }
