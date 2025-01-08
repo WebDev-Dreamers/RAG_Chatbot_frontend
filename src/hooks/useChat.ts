@@ -1,40 +1,35 @@
-import { useEffect, useState } from 'react';
-import { IChatHistory } from '../types';
+import { useCallback, useEffect, useState } from 'react';
+import { ChatType, IChatHistory, IHistory, IMessage } from '../types';
 import { useChatbotStore } from '../store/chatbotStore';
 
-export const useChat = (chatbotType: 'study' | 'convention') => {
-  const { chatAnswer, chatHistory, getChatAnswer, getChatHistory } = useChatbotStore();
+export const useChat = (type: ChatType) => {
+  const { getChatHistory } = useChatbotStore();
 
-  const [chats, setChats] = useState<IChatHistory[]>([
-    {
-      who: 'bot',
-      message: '안녕하세요. Simple Chatbot 입니다. 무엇을 도와드릴까요?',
-    },
-  ]);
+  const [history, setHistory] = useState<IHistory[]>([]);
+  const [chats, setChats] = useState<IMessage[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleSendMessage = async (question: string): Promise<void> => {
-    const userChat: IChatHistory = { who: 'user', message: question };
-    setChats((prevChats) => [...prevChats, userChat]);
+  const fetchChatHistory = useCallback(async () => {
+    setLoading(true);
 
-    await getChatAnswer({ chatbotType, question });
+    try {
+      const res: IChatHistory = await getChatHistory(type);
 
-    if (chatAnswer) {
-      const botChat: IChatHistory = { who: 'bot', message: chatAnswer };
-      setChats((prevChats) => [...prevChats, botChat]);
+      setHistory(res.history);
+      setChats(
+        res.chats.map((chat) => ({
+          role: chat.role,
+          content: chat.content,
+        }))
+      );
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [getChatHistory, type]);
 
   useEffect(() => {
-    if (chatHistory.length === 0) {
-      getChatHistory(chatbotType).then((history) => {
-        const contents: IChatHistory[] = history.map((chat) => ({
-          who: chat.who,
-          message: chat.message,
-        }));
-        setChats((prevChats) => [...prevChats, ...contents]);
-      });
-    }
-  }, [getChatHistory, chatHistory.length]);
+    fetchChatHistory();
+  }, [fetchChatHistory]);
 
-  return { chats, handleSendMessage };
+  return { history, chats, loading };
 };
