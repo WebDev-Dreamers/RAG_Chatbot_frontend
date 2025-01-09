@@ -11,6 +11,11 @@ export const useChat = (type: ChatType) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const handleError = useCallback((error: string) => {
+    setError(error);
+    setTimeout(() => setError(null), 2000);
+  }, []);
+
   const fetchChatHistory = useCallback(async () => {
     setLoading(true);
 
@@ -25,6 +30,8 @@ export const useChat = (type: ChatType) => {
           content: chat.content,
         }))
       );
+    } catch (error) {
+      handleError('히스토리를 가져오는 데 실패했습니다.');
     } finally {
       setLoading(false);
     }
@@ -44,7 +51,7 @@ export const useChat = (type: ChatType) => {
         );
         setSelectedChatId(chatId);
       } catch (err) {
-        setError('채팅 내역을 가져오는 데 실패했습니다.');
+        handleError('채팅 내역을 가져오는 데 실패했습니다.');
       } finally {
         setLoading(false);
       }
@@ -55,7 +62,7 @@ export const useChat = (type: ChatType) => {
   const sendMessage = useCallback(
     async (question: string) => {
       if (selectedChatId === null) {
-        setError('선택된 채팅방이 없습니다.');
+        handleError('선택된 채팅방이 없습니다.');
         return;
       }
 
@@ -73,7 +80,7 @@ export const useChat = (type: ChatType) => {
           setChats((prevChats) => [...prevChats, botChat]);
         }
       } catch (error) {
-        setError('메시지 전송에 실패했습니다.');
+        handleError('메시지 전송에 실패했습니다.');
       }
     },
     [getChatAnswer, type, history]
