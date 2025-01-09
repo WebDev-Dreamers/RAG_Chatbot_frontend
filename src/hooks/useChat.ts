@@ -23,7 +23,7 @@ export const useChat = (type: ChatType) => {
       const res: IChatHistory = await getChatHistory(type);
 
       setHistory(res.history);
-      setSelectedChatId(history[0]?.id);
+      setSelectedChatId(res.history[0].id);
       setChats(
         res.chats.map((chat) => ({
           role: chat.role,
@@ -90,5 +90,5 @@ export const useChat = (type: ChatType) => {
     fetchChatHistory();
   }, [fetchChatHistory]);
 
-  return { history, chats, loading, error, fetchChats, sendMessage };
+  return { history, chats, selectedChatId, loading, error, fetchChats, sendMessage };
 };
