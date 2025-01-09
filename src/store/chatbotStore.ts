@@ -1,11 +1,13 @@
 import { create } from 'zustand';
-import { getAnswer, getHistory } from '../api/chatbot';
-import { ChatType, IMessage, IChatHistory, IChatRequest } from '../types';
+import { getAnswer, getChats, getHistory } from '../api/chatbot';
+import { ChatType, IMessage, IChatHistory, IChatRequest, IChat, ICurrentChat } from '../types';
 
 interface ChatbotState {
   chatHistory: IChatHistory;
+  selectedChats: IChat[];
   chatAnswer: IMessage;
   getChatHistory: (type: ChatType) => Promise<IChatHistory>;
+  getSelectedChats: (params: ICurrentChat) => Promise<IChat[]>;
   getChatAnswer: (request: IChatRequest) => Promise<IMessage>;
 }
 
@@ -14,6 +16,7 @@ export const useChatbotStore = create<ChatbotState>((set) => ({
     history: [],
     chats: [],
   },
+  selectedChats: [],
   chatAnswer: {
     role: 'bot',
     content: '',
@@ -23,6 +26,12 @@ export const useChatbotStore = create<ChatbotState>((set) => ({
     const historyList = await getHistory(type);
     set({ chatHistory: historyList });
     return historyList;
+  },
+
+  getSelectedChats: async (params: ICurrentChat) => {
+    const currChats = await getChats(params);
+    set({ selectedChats: currChats });
+    return currChats;
   },
 
   getChatAnswer: async (request: IChatRequest) => {
