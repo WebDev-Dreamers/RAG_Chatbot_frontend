@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 function Footer() {
   return (
@@ -11,6 +11,7 @@ function Footer() {
 const FooterStyle = styled.footer`
   padding: 24px 0;
   background: #333;
+
   .copyright {
     color: white;
     font-size: 12px;

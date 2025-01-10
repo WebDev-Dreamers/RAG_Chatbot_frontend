@@ -67,12 +67,12 @@ function StudyChat() {
 
 const StudyChatStyle = styled.div<{ visibleHistory: boolean }>`
   display: flex;
-  height: 100%;
+  height: calc(100vh - 100px - 62px);
 
   .history {
+    height: 100%;
     width: 250px;
     background: #f4f4f4;
-    height: 100%;
     transition: transform 0.3s ease;
     transform: ${({ visibleHistory }) => (visibleHistory ? 'translateX(0)' : 'translateX(-100%)')};
     display: ${({ visibleHistory }) => (visibleHistory ? '' : 'none')};
@@ -104,6 +104,7 @@ const StudyChatStyle = styled.div<{ visibleHistory: boolean }>`
     display: flex;
     flex-direction: column;
     position: relative;
+    height: 100%;
   }
 `;
 

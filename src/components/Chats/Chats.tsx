@@ -39,6 +39,7 @@ const ChatsStyle = styled.div`
     width: 100%;
     margin: 0 auto;
     overflow-y: auto;
+    scrollbar-gutter: stable;
 
     .chatBox {
       width: 80%;

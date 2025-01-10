@@ -1,18 +1,18 @@
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import main from "../assets/main.jpg";
-import applicant from "../assets/applicant.png";
-import student from "../assets/student.png";
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import main from '../assets/main.jpg';
+import applicant from '../assets/applicant.png';
+import student from '../assets/student.png';
 
 function Main() {
   return (
     <MainStyle>
       <div className="container">
-        <Link to="/study-bot" className="chatBtn applicantBtn">
+        <Link to="/study-chat" className="chatBtn applicantBtn">
           <h2>Study Chatbot</h2>
           <p>학습 내용에 관련하여 질문하세요.</p>
         </Link>
-        <Link to="/student-bot" className="chatBtn studentBtn">
+        <Link to="/student-chat" className="chatBtn studentBtn">
           <h2>Convention Chatbot</h2>
           <p>팀별 규칙을 커스텀하여 사용하세요.</p>
         </Link>
@@ -23,7 +23,8 @@ function Main() {
 }
 
 const MainStyle = styled.div`
-  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
 
   .container {
     display: flex;

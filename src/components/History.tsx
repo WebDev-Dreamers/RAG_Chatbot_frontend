@@ -14,29 +14,46 @@ interface HistoryProps {
 const History: React.FC<HistoryProps> = ({ type, items, selected, onSelect, onToggle }) => {
   return (
     <HistoryStyle>
-      <div className="header">
-        <div className="title">{type === 'study' ? 'STUDY' : 'CUSTOM'} HISTORY</div>
-        <button className="toggleBtn" onClick={onToggle}>
-          <FiChevronLeft />
-        </button>
+      <div className="scroll">
+        <div className="header">
+          <div className="title">{type === 'study' ? 'STUDY' : 'CUSTOM'} HISTORY</div>
+          <button className="toggleBtn" onClick={onToggle}>
+            <FiChevronLeft />
+          </button>
+        </div>
+        <ul className="list">
+          {items.map((item) => (
+            <li
+              key={item.id}
+              className={`item ${item.id === selected ? 'selected' : ''}`}
+              onClick={() => onSelect && onSelect(item.id)}
+            >
+              {item.title}
+            </li>
+          ))}
+        </ul>
       </div>
-      <ul className="list">
-        {items.map((item) => (
-          <li
-            key={item.id}
-            className={`item ${item.id === selected ? 'selected' : ''}`}
-            onClick={() => onSelect && onSelect(item.id)}
-          >
-            {item.title}
-          </li>
-        ))}
-      </ul>
     </HistoryStyle>
   );
 };
 
 const HistoryStyle = styled.div`
-  padding: 20px;
+  .scroll {
+    padding: 20px;
+    height: calc(100vh - 100px - 102px);
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    scrollbar-background: black;
+  }
+
+  .scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .scroll::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
 
   .header {
     display: flex;
