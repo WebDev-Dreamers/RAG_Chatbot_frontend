@@ -33,6 +33,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         error: error.response?.data?.message || '로그인 실패',
         loading: false,
       });
+      setTimeout(() => set({ error: null }), 2000);
     }
   },
 
