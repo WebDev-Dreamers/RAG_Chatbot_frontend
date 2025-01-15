@@ -20,6 +20,11 @@ export interface IChatHistory {
   chats: IChat[];
 }
 
+export interface ICurrentChat {
+  type: ChatType;
+  chatId: number;
+}
+
 export interface IMessage {
   role: ChatRole;
   content: string;
